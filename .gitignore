@@ -1,4 +1,2 @@
-.idea/.gitignore
-.idea/codeStyles
-.idea/sonarlint/
+.idea/*
 *.iml
