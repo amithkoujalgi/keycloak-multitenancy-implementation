@@ -1,0 +1,48 @@
+version: '3.3'
+
+services:
+  keycloak-server:
+    image: jboss/keycloak
+    container_name: keycloak-server
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - 8080:8080
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+  kong:
+    image: custom-kong:1.0
+    container_name: kong
+    volumes:
+      - ./resources/kong/entrypoint.sh:/usr/local/bin/entrypoint.sh
+    ports:
+      - 8000:8000
+      - 8001:8001
+      - 8443:8443
+    command:
+      - /usr/local/bin/entrypoint.sh
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    environment:
+      APP_DOMAIN: 'localhost'
+
+  kong-ui:
+    image: pantsel/konga
+    container_name: kong-ui
+    volumes:
+      - ./resources/kong-ui/default-node.data:/apps/konga/default-node.data
+      - ./resources/kong-ui/default-user.data:/apps/konga/default-user.data
+    environment:
+      KONGA_SEED_USER_DATA_SOURCE_FILE: /apps/konga/default-user.data
+      KONGA_SEED_KONG_NODE_DATA_SOURCE_FILE: /apps/konga/default-node.data
+    ports:
+      - 8002:1337
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
