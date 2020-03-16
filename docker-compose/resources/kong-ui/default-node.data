@@ -1,0 +1,9 @@
+module.exports = [
+    {
+        "name": "Main Gateway",
+        "type": "default",
+        "kong_admin_url": "http://kong:8001",
+        "kon_api_key": "",
+        "health_checks": false,
+    },
+]
