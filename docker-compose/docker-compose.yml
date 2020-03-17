@@ -31,8 +31,7 @@ services:
       - /usr/local/bin/entrypoint.sh
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
-    environment:
-      APP_DOMAIN: 'localhost'
+    network_mode: "bridge"
 
   kong-ui:
     image: pantsel/konga
@@ -47,3 +46,8 @@ services:
       - 8002:1337
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
+    network_mode: "bridge"
+
+#networks:
+#  app_network:
+#    driver: bridge
