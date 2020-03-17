@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SubdomainBasedTenantConfigResolver implements KeycloakConfigResolver {
+public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolver {
 
 	private static AdapterConfig adapterConfig;
 
@@ -23,7 +23,7 @@ public class SubdomainBasedTenantConfigResolver implements KeycloakConfigResolve
 
 	public static void setAdapterConfig( AdapterConfig adapterConfig )
 	{
-		SubdomainBasedTenantConfigResolver.adapterConfig = adapterConfig;
+		SubDomainBasedTenantConfigResolver.adapterConfig = adapterConfig;
 	}
 
 	public String getDomainName( String url ) throws URISyntaxException
@@ -45,11 +45,12 @@ public class SubdomainBasedTenantConfigResolver implements KeycloakConfigResolve
 		{
 			e.printStackTrace();
 		}
+		//split the URL by dot. i.e., extract the subdomain. For example, xxx is the subdomain entity in the URL xxx.app.com
 		String realm = url.split("\\.")[0];
 		KeycloakDeployment deployment = cache.get(realm);
 		if( null == deployment )
 		{
-			// not found on the simple cache, try to load it from the file system
+			// if not found on the cache, try to load it from the file system
 			try
 			{
 				FileInputStream is = new FileInputStream(
