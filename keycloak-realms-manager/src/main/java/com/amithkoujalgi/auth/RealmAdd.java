@@ -126,7 +126,7 @@ public class RealmAdd {
 			System.out.println(String.format("Admin user for Keycloak realm %s created.", realmName));
 
 			System.out.println(String.format(
-					"Ensure that you have the subdomain ready and mapped to reach the Keycloak endpoint. If you're running a local setup, add the following to your /etc/hosts file:\n\n127.0.0.1 %s.localhost",
+					"Ensure that you have the subdomain ready and mapped to reach the Keycloak endpoint. If you're running a local setup, add the following to your /etc/hosts file:\n\n127.0.0.1 %s.localhost\n\n",
 					realmName));
 		}
 	}
