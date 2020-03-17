@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>${keycloak.version}</version>
+            <version>9.0.0</version>
         </dependency>
     </dependencies>
 </project>
