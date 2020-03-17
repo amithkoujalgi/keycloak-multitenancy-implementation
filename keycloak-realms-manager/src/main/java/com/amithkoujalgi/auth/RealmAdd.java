@@ -19,8 +19,8 @@ public class RealmAdd {
 		//https://www.n-k.de/2016/08/keycloak-admin-client.html
 		//https://www.keycloak.org/docs/latest/securing_apps/index.html#java-adapters
 
-		createRealm("axis");
-		createRealm("highpeak");
+		createRealm("org1");
+		createRealm("org2");
 	}
 
 	public static Properties getConfig() throws IOException
