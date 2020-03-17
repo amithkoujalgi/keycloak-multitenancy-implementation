@@ -13,6 +13,7 @@
 
     <modules>
         <module>multi-tenant-auth-server</module>
+        <module>keycloak-realms-manager</module>
     </modules>
 
     <properties>
