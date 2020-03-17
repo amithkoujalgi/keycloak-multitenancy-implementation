@@ -25,7 +25,9 @@ public class RealmAdd {
 		//		user.setUsername("johndoe");
 		//		//		user.set... // all the user attributes to set
 		//		kc.realm("demo").users().create(user);
-		createRealm("master");
+		createRealm("test1");
+		createRealm("test2");
+
 	}
 
 	public static String getTemplate() throws IOException
