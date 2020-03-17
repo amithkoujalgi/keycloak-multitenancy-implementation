@@ -51,6 +51,12 @@ public class RealmAdd {
 		String REALMS_DIRECTORY =
 				System.getProperty("user.home") + File.separator + "keycloak" + File.separator + "realms";
 
+		File dir = new File(REALMS_DIRECTORY);
+		if( !dir.exists() )
+		{
+			dir.mkdirs();
+		}
+
 		File existingRealm = new File(REALMS_DIRECTORY + File.separator + realmName + "-keycloak.json");
 		if( existingRealm.exists() )
 		{
