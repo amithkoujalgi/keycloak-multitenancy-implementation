@@ -16,6 +16,10 @@ curl -i -X POST \
   --data 'name=IAMServerService' \
   --data "url=http://keycloak-server:8080"
 
+curl -i -X POST \
+  --url http://localhost:8001/services/ \
+  --data 'name=AuthServerService' \
+  --data "url=http://localhost:9090"
 
 # Add routes
 
@@ -25,6 +29,22 @@ curl -i -X POST \
   --data "hosts[]=keycloak-server" \
   --data "hosts[]=localhost" \
   --data 'paths[]=/auth' \
+  --data 'methods[]=GET' \
+  --data 'methods[]=POST' \
+  --data 'methods[]=PUT' \
+  --data 'methods[]=DELETE' \
+  --data 'methods[]=OPTIONS' \
+  --data 'methods[]=HEAD' \
+  --data 'methods[]=PATCH' \
+  --data 'strip_path=false' \
+  --data 'preserve_host=true'
+
+curl -i -X POST \
+  --url http://localhost:8001/services/AuthServerService/routes \
+  --data 'name=AuthServerServiceRoute' \
+  --data "hosts[]=keycloak-server" \
+  --data "hosts[]=localhost" \
+  --data 'paths[]=/authenticate' \
   --data 'methods[]=GET' \
   --data 'methods[]=POST' \
   --data 'methods[]=PUT' \
