@@ -10,7 +10,7 @@ import java.io.File;
 @SpringBootApplication
 @ImportAutoConfiguration( MultitenantConfiguration.class )
 //@EnableAutoConfiguration
-public class App {
+public class AuthServerApp {
 
 	public static String REALMS_DIRECTORY;
 
@@ -19,6 +19,6 @@ public class App {
 		REALMS_DIRECTORY = System.getProperty("user.home") + File.separator + "keycloak" + File.separator + "realms";
 		File realmsDir = new File(REALMS_DIRECTORY);
 		realmsDir.mkdirs();
-		SpringApplication.run(App.class, args);
+		SpringApplication.run(AuthServerApp.class, args);
 	}
 }

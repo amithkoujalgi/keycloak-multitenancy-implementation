@@ -33,12 +33,14 @@ public class AuthController extends AbstractController {
 		{
 			final KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) request
 					.getUserPrincipal();
-			System.out.println(keycloakAuthenticationToken.getName());
+			//			System.out.println(keycloakAuthenticationToken.getName());
 
 			final KeycloakPrincipal keycloakPrincipal = (KeycloakPrincipal) keycloakAuthenticationToken.getPrincipal();
 			final IDToken idToken = keycloakPrincipal.getKeycloakSecurityContext().getIdToken();
 
-			System.out.println("Token: " + keycloakPrincipal.getKeycloakSecurityContext().getTokenString());
+			System.out.println(
+					"Login successful from Keycloak. Token created: " + keycloakPrincipal.getKeycloakSecurityContext()
+							.getTokenString());
 
 			response.addHeader("user-status", "success");
 

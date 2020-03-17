@@ -1,6 +1,6 @@
 package com.amithkoujalgi.auth.security;
 
-import com.amithkoujalgi.auth.App;
+import com.amithkoujalgi.auth.AuthServerApp;
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
@@ -54,7 +54,7 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 			try
 			{
 				FileInputStream is = new FileInputStream(
-						App.REALMS_DIRECTORY + File.separator + realm + "-keycloak.json");
+						AuthServerApp.REALMS_DIRECTORY + File.separator + realm + "-keycloak.json");
 				if( is == null )
 				{
 					throw new IllegalStateException("Not able to find the file /" + realm + "-keycloak.json");

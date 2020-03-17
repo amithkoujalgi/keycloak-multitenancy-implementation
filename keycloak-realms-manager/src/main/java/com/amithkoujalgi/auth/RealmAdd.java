@@ -101,6 +101,7 @@ public class RealmAdd {
 					.replace("{realm-name}", realmName);
 
 			ClientRepresentation client = new ClientRepresentation();
+			client.setPublicClient(true);
 			client.setClientId(realmName + "-auth");
 			client.setRedirectUris(Arrays.asList(new String[] { clientRootURL + "/*" }));
 			client.setRootUrl(clientRootURL);
@@ -113,13 +114,13 @@ public class RealmAdd {
 
 			//Create a new user in the created realm
 			UserRepresentation user = new UserRepresentation();
-			user.setUsername("admin");
+			user.setUsername(getConfigProperty("keycloak.custom-realm.admin-user.username"));
 			user.setEmailVerified(true);
 			user.setEnabled(true);
 
 			CredentialRepresentation creds = new CredentialRepresentation();
 			creds.setTemporary(true);
-			creds.setValue("admin");
+			creds.setValue(getConfigProperty("keycloak.custom-realm.admin-user.password"));
 			user.setCredentials(Arrays.asList(new CredentialRepresentation[] { creds }));
 			kc.realm(realmName).users().create(user);
 			System.out.println(String.format("Admin user for Keycloak realm %s created.", realmName));
