@@ -46,7 +46,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	@Bean
 	public KeycloakConfigResolver KeycloakConfigResolver()
 	{
-		return new MultitenantConfigResolver();
+		return new SubdomainBasedTenantConfigResolver();
 	}
 
 	/**

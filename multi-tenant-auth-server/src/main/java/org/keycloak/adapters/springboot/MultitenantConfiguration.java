@@ -1,6 +1,6 @@
 package org.keycloak.adapters.springboot;
 
-import com.amithkoujalgi.auth.security.MultitenantConfigResolver;
+import com.amithkoujalgi.auth.security.SubdomainBasedTenantConfigResolver;
 import org.apache.catalina.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -23,7 +23,7 @@ public class MultitenantConfiguration extends KeycloakAutoConfiguration {
 	{
 		m_keycloakProperties = keycloakProperties;
 		super.setKeycloakSpringBootProperties(keycloakProperties);
-		MultitenantConfigResolver.setAdapterConfig(keycloakProperties);
+		SubdomainBasedTenantConfigResolver.setAdapterConfig(keycloakProperties);
 	}
 
 	@Bean
@@ -47,7 +47,7 @@ public class MultitenantConfiguration extends KeycloakAutoConfiguration {
 			super.customize(context);
 			final String name = "keycloak.config.resolver";
 			context.removeParameter(name);
-			context.addParameter(name, MultitenantConfigResolver.class.getName());
+			context.addParameter(name, SubdomainBasedTenantConfigResolver.class.getName());
 		}
 	}
 }

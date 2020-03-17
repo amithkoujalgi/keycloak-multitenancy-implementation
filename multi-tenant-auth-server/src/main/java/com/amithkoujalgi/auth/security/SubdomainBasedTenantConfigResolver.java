@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MultitenantConfigResolver implements KeycloakConfigResolver {
+public class SubdomainBasedTenantConfigResolver implements KeycloakConfigResolver {
 
 	private static AdapterConfig adapterConfig;
 
@@ -23,7 +23,7 @@ public class MultitenantConfigResolver implements KeycloakConfigResolver {
 
 	public static void setAdapterConfig( AdapterConfig adapterConfig )
 	{
-		MultitenantConfigResolver.adapterConfig = adapterConfig;
+		SubdomainBasedTenantConfigResolver.adapterConfig = adapterConfig;
 	}
 
 	public String getDomainName( String url ) throws URISyntaxException
@@ -46,7 +46,6 @@ public class MultitenantConfigResolver implements KeycloakConfigResolver {
 			e.printStackTrace();
 		}
 		String realm = url.split("\\.")[0];
-		//		System.out.println("[Realm] - " + realm);
 		KeycloakDeployment deployment = cache.get(realm);
 		if( null == deployment )
 		{
@@ -64,10 +63,10 @@ public class MultitenantConfigResolver implements KeycloakConfigResolver {
 			}
 			catch( FileNotFoundException e )
 			{
-				e.printStackTrace();
+				//				e.printStackTrace();
+				System.out.println("[ERROR]: Invalid tenant '" + realm + "' or tenant config not found!");
 			}
 		}
-
 		return deployment;
 	}
 
