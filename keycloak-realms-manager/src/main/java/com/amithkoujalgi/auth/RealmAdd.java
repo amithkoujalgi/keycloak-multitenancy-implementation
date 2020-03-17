@@ -9,7 +9,6 @@ import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -20,8 +19,8 @@ public class RealmAdd {
 		//https://www.n-k.de/2016/08/keycloak-admin-client.html
 		//https://www.keycloak.org/docs/latest/securing_apps/index.html#java-adapters
 
-		createRealm("test1");
-		createRealm("test2");
+		createRealm("axis");
+		createRealm("highpeak");
 	}
 
 	public static Properties getConfig() throws IOException
@@ -124,6 +123,10 @@ public class RealmAdd {
 			user.setCredentials(Arrays.asList(new CredentialRepresentation[] { creds }));
 			kc.realm(realmName).users().create(user);
 			System.out.println(String.format("Admin user for Keycloak realm %s created.", realmName));
+
+			System.out.println(String.format(
+					"Ensure that you have the subdomain ready and mapped to reach the Keycloak endpoint. If you're running a local setup, add the following to your /etc/hosts file:\n\n127.0.0.1 %s.localhost",
+					realmName));
 		}
 	}
 }
