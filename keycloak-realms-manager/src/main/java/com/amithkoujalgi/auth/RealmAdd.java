@@ -116,6 +116,7 @@ public class RealmAdd {
 			user.setUsername(getConfigProperty("keycloak.custom-realm.admin-user.username"));
 			user.setEmailVerified(true);
 			user.setEnabled(true);
+			user.setFirstName(getConfigProperty("keycloak.custom-realm.admin-user.firstname"));
 
 			CredentialRepresentation creds = new CredentialRepresentation();
 			creds.setTemporary(true);
