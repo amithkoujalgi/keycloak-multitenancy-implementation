@@ -1,0 +1,9 @@
+{
+  "realm": "{realm-name}",
+  "resource": "{realm-name}-auth",
+  "auth-server-url": "http://{realm-name}.localhost:8080/auth",
+  "ssl-required": "external",
+  "credentials": {
+    "secret": "password"
+  }
+}
