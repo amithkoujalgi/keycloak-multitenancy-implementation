@@ -1,2 +1,4 @@
 .idea/*
 *.iml
+/keycloak-realms-manager/target/
+/multi-tenant-auth-server/target/
