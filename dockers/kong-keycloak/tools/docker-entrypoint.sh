@@ -201,6 +201,8 @@ fi
 /opt/jboss/tools/jgroups.sh
 /opt/jboss/tools/autorun.sh
 
+echo "PG_SERVER_HOST: $PG_SERVER_HOST"
+sed -i "s/PG_SERVER_HOST/$PG_SERVER_HOST/g" /etc/kong/kong.conf
 kong migrations bootstrap -c /etc/kong/kong.conf
 kong start -c /etc/kong/kong.conf
 

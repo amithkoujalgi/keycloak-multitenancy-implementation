@@ -2,40 +2,60 @@ version: '3.4'
 
 services:
 
-  keycloak-server:
-    image: jboss/keycloak
-    container_name: keycloak-server
+  postgres:
+    container_name: postgres
+    image: postgres:latest
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      POSTGRES_DB: 'kong'
+      POSTGRES_PASSWORD: 'kong'
+      POSTGRES_USER: 'kong'
     ports:
-      - 8080:8080
+      - 5432:5432
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
+
+  kong-keycloak:
+    image: kong-keycloak:1.0
+    container_name: kong-keycloak
+    environment:
+      PG_SERVER_HOST: postgres
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_PORT: 5432
+      DB_DATABASE: kong
+      DB_USER: kong
+      DB_PASSWORD: kong
     healthcheck:
       test: curl --fail -s http://localhost:8080/ || exit 1
       interval: 1m30s
       timeout: 10s
       retries: 3
-  #    networks:
-  #      - app_network
-
-  kong:
-    image: custom-kong:1.0
-    container_name: kong
-    volumes:
-      - ./resources/kong/entrypoint.sh:/usr/local/bin/entrypoint.sh
     ports:
+      - 443:443
       - 8000:8000
       - 8001:8001
+      - 8080:8080
       - 8443:8443
-    command:
-      - /usr/local/bin/entrypoint.sh
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
-    network_mode: "bridge"
-  #    networks:
-  #      - app_network
+    depends_on:
+      - postgres
+
+  #  kong:
+  #    image: custom-kong:1.0
+  #    container_name: kong
+  #    volumes:
+  #      - ./resources/kong/entrypoint.sh:/usr/local/bin/entrypoint.sh
+  #    ports:
+  #      - 8000:8000
+  #      - 8001:8001
+  #      - 8443:8443
+  #    command:
+  #      - /usr/local/bin/entrypoint.sh
+  #    sysctls:
+  #      - net.ipv6.conf.all.disable_ipv6=1
 
   kong-ui:
     image: pantsel/konga
@@ -50,9 +70,3 @@ services:
       - 8002:1337
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
-#    networks:
-#      - app_network
-
-#networks:
-#  app_network:
-#    driver: bridge
