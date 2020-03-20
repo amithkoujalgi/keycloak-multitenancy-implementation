@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# Add services
+
+curl -i -X POST \
+  --url http://localhost:8001/services/ \
+  --data 'name=IAMServerService' \
+  --data "url=http://kong-keycloak:8080"
+
+curl -i -X POST \
+  --url http://localhost:8001/services/ \
+  --data 'name=AuthServerService' \
+  --data "url=http://localhost:9090"
+
+# Add routes
+
+curl -i -X POST \
+  --url http://localhost:8001/services/IAMServerService/routes \
+  --data 'name=IAMServerServiceRoute' \
+  --data "hosts[]=kong-keycloak" \
+  --data "hosts[]=localhost" \
+  --data 'paths[]=/auth' \
+  --data 'methods[]=GET' \
+  --data 'methods[]=POST' \
+  --data 'methods[]=PUT' \
+  --data 'methods[]=DELETE' \
+  --data 'methods[]=OPTIONS' \
+  --data 'methods[]=HEAD' \
+  --data 'methods[]=PATCH' \
+  --data 'strip_path=false' \
+  --data 'preserve_host=true'
+
+curl -i -X POST \
+  --url http://localhost:8001/services/AuthServerService/routes \
+  --data 'name=AuthServerServiceRoute' \
+  --data "hosts[]=kong-keycloak" \
+  --data "hosts[]=localhost" \
+  --data 'paths[]=/authenticate' \
+  --data 'methods[]=GET' \
+  --data 'methods[]=POST' \
+  --data 'methods[]=PUT' \
+  --data 'methods[]=DELETE' \
+  --data 'methods[]=OPTIONS' \
+  --data 'methods[]=HEAD' \
+  --data 'methods[]=PATCH' \
+  --data 'strip_path=false' \
+  --data 'preserve_host=true'
+
+tail -f /usr/local/kong/logs/error.log
+# End: Add services and routes to Internal Kong Gateway
