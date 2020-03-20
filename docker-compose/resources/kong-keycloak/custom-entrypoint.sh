@@ -10,7 +10,7 @@ curl -i -X POST \
 curl -i -X POST \
   --url http://localhost:8001/services/ \
   --data 'name=AuthServerService' \
-  --data "url=http://localhost:9090"
+  --data "url=http://auth-server:9090"
 
 # Add routes
 
