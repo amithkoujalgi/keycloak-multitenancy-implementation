@@ -46,5 +46,4 @@ curl -i -X POST \
   --data 'strip_path=false' \
   --data 'preserve_host=true'
 
-tail -f /usr/local/kong/logs/error.log
 # End: Add services and routes to Internal Kong Gateway
