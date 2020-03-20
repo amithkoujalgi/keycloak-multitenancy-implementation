@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.4'
 
 services:
 
@@ -17,6 +17,8 @@ services:
       interval: 1m30s
       timeout: 10s
       retries: 3
+  #    networks:
+  #      - app_network
 
   kong:
     image: custom-kong:1.0
@@ -32,6 +34,8 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     network_mode: "bridge"
+  #    networks:
+  #      - app_network
 
   kong-ui:
     image: pantsel/konga
@@ -46,7 +50,8 @@ services:
       - 8002:1337
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
-    network_mode: "bridge"
+#    networks:
+#      - app_network
 
 #networks:
 #  app_network:
