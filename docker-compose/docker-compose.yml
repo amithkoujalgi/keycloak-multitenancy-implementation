@@ -41,6 +41,7 @@ services:
       - 8001:8001
       - 8080:8080
       - 8443:8443
+      - 9090:9090
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     depends_on:
@@ -57,15 +58,5 @@ services:
       KONGA_SEED_KONG_NODE_DATA_SOURCE_FILE: /apps/konga/default-node.data
     ports:
       - 8002:1337
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-
-  auth-server:
-    image: multi-tenant-auth-server:1.0
-    container_name: auth-server
-    volumes:
-      - ~/keycloak/realms:/root/keycloak/realms
-    ports:
-      - 9090:9090
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
