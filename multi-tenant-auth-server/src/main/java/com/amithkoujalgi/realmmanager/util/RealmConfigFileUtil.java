@@ -1,4 +1,4 @@
-package com.amithkoujalgi.auth.util;
+package com.amithkoujalgi.realmmanager.util;
 
 import java.io.*;
 

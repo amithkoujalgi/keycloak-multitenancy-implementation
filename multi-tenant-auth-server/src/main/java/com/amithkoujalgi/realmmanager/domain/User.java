@@ -1,4 +1,4 @@
-package com.amithkoujalgi.auth.domain;
+package com.amithkoujalgi.realmmanager.domain;
 
 import java.util.ArrayList;
 import java.util.List;

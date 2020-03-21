@@ -1,4 +1,4 @@
-package com.amithkoujalgi.auth.domain;
+package com.amithkoujalgi.realmmanager.domain;
 
 public class UserCreds {
 

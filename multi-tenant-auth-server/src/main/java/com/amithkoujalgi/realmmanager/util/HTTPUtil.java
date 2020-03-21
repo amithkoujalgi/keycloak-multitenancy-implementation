@@ -1,4 +1,4 @@
-package com.amithkoujalgi.auth.util;
+package com.amithkoujalgi.realmmanager.util;
 
 import com.google.gson.Gson;
 import org.apache.http.client.methods.CloseableHttpResponse;

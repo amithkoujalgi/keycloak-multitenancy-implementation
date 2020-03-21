@@ -7,7 +7,9 @@ import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.adapters.OIDCHttpFacade;
 import org.keycloak.representations.adapters.config.AdapterConfig;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -44,15 +46,6 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 			e.printStackTrace();
 		}
 		// If user is registering a new tenant, by-pass the subdomain check and let the user register a tenant
-
-		//		System.out.println(request.getURI());
-		if( request.getURI().endsWith("/register.html") || request.getURI().endsWith(".js") )
-		{
-			String defaultRealm = "{  \"realm\": \"default\",  \"resource\": \"org1-auth\",  \"auth-server-url\": \"http://org1.localhost:8080/auth\",  \"ssl-required\": \"external\",  \"credentials\": {    \"secret\": \"password\"  }}";
-			InputStream is = new ByteArrayInputStream(defaultRealm.getBytes());
-			KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(is);
-			return deployment;
-		}
 
 		//split the URL by dot. i.e., extract the subdomain. For example, xxx is the subdomain entity in the URL xxx.app.com
 		String subdomain = url.split("\\.")[0];

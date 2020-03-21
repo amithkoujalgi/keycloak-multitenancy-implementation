@@ -1,11 +1,14 @@
-package com.amithkoujalgi.auth;
+package com.amithkoujalgi.realmmanager;
+//import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+//import org.keycloak.admin.client.Keycloak;
+//import org.keycloak.admin.client.KeycloakBuilder;
 
-import com.amithkoujalgi.auth.domain.Client;
-import com.amithkoujalgi.auth.domain.Realm;
-import com.amithkoujalgi.auth.domain.User;
-import com.amithkoujalgi.auth.domain.UserCreds;
-import com.amithkoujalgi.auth.util.HTTPUtil;
-import com.amithkoujalgi.auth.util.RealmConfigFileUtil;
+import com.amithkoujalgi.realmmanager.domain.Client;
+import com.amithkoujalgi.realmmanager.domain.Realm;
+import com.amithkoujalgi.realmmanager.domain.User;
+import com.amithkoujalgi.realmmanager.domain.UserCreds;
+import com.amithkoujalgi.realmmanager.util.HTTPUtil;
+import com.amithkoujalgi.realmmanager.util.RealmConfigFileUtil;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -17,14 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class CreateRealm {
-
-	public static void main( String[] args ) throws Exception
-	{
-		createRealm("org1");
-		createRealm("org2");
-
-	}
+public class RealmManager {
 
 	public static void createRealm( String realmName ) throws Exception
 	{
@@ -72,7 +68,7 @@ public class CreateRealm {
 
 	private static String getConfigProperty( String key ) throws IOException
 	{
-		InputStream input = CreateRealm.class.getResourceAsStream("/application.properties");
+		InputStream input = RealmManager.class.getResourceAsStream("/application.properties");
 		Properties prop = new Properties();
 		prop.load(input);
 		return prop.getProperty(key);
