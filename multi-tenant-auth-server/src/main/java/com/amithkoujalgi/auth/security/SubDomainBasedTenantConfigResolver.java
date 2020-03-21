@@ -45,7 +45,7 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 		}
 		// If user is registering a new tenant, by-pass the subdomain check and let the user register a tenant
 
-		System.out.println(request.getURI());
+		//		System.out.println(request.getURI());
 		if( request.getURI().endsWith("/register.html") || request.getURI().endsWith(".js") )
 		{
 			String defaultRealm = "{  \"realm\": \"default\",  \"resource\": \"org1-auth\",  \"auth-server-url\": \"http://org1.localhost:8080/auth\",  \"ssl-required\": \"external\",  \"credentials\": {    \"secret\": \"password\"  }}";
