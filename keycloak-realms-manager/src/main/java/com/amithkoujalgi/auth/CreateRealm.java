@@ -70,7 +70,7 @@ public class CreateRealm {
 
 	private static String getConfigProperty( String key ) throws IOException
 	{
-		InputStream input = RealmAdd.class.getResourceAsStream("/application.properties");
+		InputStream input = CreateRealm.class.getResourceAsStream("/application.properties");
 		Properties prop = new Properties();
 		prop.load(input);
 		return prop.getProperty(key);
