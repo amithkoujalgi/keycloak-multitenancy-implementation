@@ -22,6 +22,8 @@ public class CreateRealm {
 	public static void main( String[] args ) throws Exception
 	{
 		createRealm("org1");
+		createRealm("org2");
+
 	}
 
 	public static void createRealm( String realmName ) throws Exception
