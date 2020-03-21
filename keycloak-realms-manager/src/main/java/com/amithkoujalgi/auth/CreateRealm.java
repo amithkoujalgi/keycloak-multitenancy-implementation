@@ -1,5 +1,9 @@
 package com.amithkoujalgi.auth;
 
+import com.amithkoujalgi.auth.domain.Client;
+import com.amithkoujalgi.auth.domain.Realm;
+import com.amithkoujalgi.auth.domain.User;
+import com.amithkoujalgi.auth.domain.UserCreds;
 import com.amithkoujalgi.auth.util.HTTPUtil;
 import com.amithkoujalgi.auth.util.RealmConfigFileUtil;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -17,7 +21,7 @@ public class CreateRealm {
 
 	public static void main( String[] args ) throws Exception
 	{
-		createRealm("org1");
+		createRealm("org2");
 	}
 
 	public static void createRealm( String realmName ) throws Exception
@@ -28,7 +32,7 @@ public class CreateRealm {
 		String masterUsername = getConfigProperty("keycloak.server.admin.username");
 		String masterPassword = getConfigProperty("keycloak.server.admin.password");
 
-		String tenantRootUrl = getConfigProperty("keycloak.custom-realm.root-url");
+		String tenantRootUrl = getConfigProperty("keycloak.custom-realm.root-url").replace("{realm-name}", realmName);
 		String tenantUsername = getConfigProperty("keycloak.custom-realm.admin-user.username");
 		String tenantUserPassword = getConfigProperty("keycloak.custom-realm.admin-user.password");
 		String tenantUserFirstName = getConfigProperty("keycloak.custom-realm.admin-user.firstname");
