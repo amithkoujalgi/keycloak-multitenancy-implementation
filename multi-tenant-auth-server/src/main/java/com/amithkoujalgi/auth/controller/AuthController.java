@@ -19,13 +19,13 @@ public class AuthController extends AbstractController {
 
 	public static synchronized String getTokenRedirectionPrefix( String redirectURI, String token )
 	{
-		return "redirect:" + redirectURI + "?bb-auth-token=" + token;
+		return "redirect:" + redirectURI + "?app-auth-token=" + token;
 	}
 
 	@GetMapping( path = "/authenticate" )
 	@ModelAttribute
 	public ModelAndView auth(
-			@RequestParam( "bb_redirect_uri" )
+			@RequestParam( "app_redirect_uri" )
 					String redirectURI, HttpServletRequest request, HttpServletResponse response )
 			throws ServletException
 	{

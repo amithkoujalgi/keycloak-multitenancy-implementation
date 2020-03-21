@@ -12,7 +12,7 @@ curl -i -X POST \
 curl -i -X POST \
   --url http://localhost:8001/services/ \
   --data 'name=AuthServerService' \
-  --data "url=http://auth-server:9090"
+  --data "url=http://kong-keycloak:9090"
 
 # Add routes
 
@@ -36,8 +36,10 @@ curl -i -X POST \
   --url http://localhost:8001/services/AuthServerService/routes \
   --data 'name=AuthServerServiceRoute' \
   --data "hosts[]=kong-keycloak" \
-  --data "hosts[]=localhost" \
+  --data "hosts[]=*.localhost" \
+  --data 'paths[]=/' \
   --data 'paths[]=/authenticate' \
+  --data 'paths[]=/sso/login' \
   --data 'methods[]=GET' \
   --data 'methods[]=POST' \
   --data 'methods[]=PUT' \
