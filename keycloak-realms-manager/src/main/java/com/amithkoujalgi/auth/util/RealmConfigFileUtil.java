@@ -1,7 +1,5 @@
 package com.amithkoujalgi.auth.util;
 
-import com.amithkoujalgi.auth.RealmAdd;
-
 import java.io.*;
 
 public class RealmConfigFileUtil {
@@ -47,7 +45,7 @@ public class RealmConfigFileUtil {
 
 	private static String getTemplate() throws IOException
 	{
-		InputStream is = RealmAdd.class.getResourceAsStream("/keycloak-auth-server-config-template.json");
+		InputStream is = RealmConfigFileUtil.class.getResourceAsStream("/keycloak-auth-server-config-template.json");
 		if( is == null )
 		{
 			throw new IllegalStateException("Not able to find the template file");
