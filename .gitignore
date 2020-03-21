@@ -2,3 +2,4 @@
 *.iml
 /keycloak-realms-manager/target/
 /multi-tenant-auth-server/target/
+docker-compose/tmp/*
