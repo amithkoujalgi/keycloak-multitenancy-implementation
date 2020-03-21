@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -64,21 +65,21 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	{
 		super.configure(http);
 
-		//		http.csrf().disable().authorizeRequests().anyRequest().authenticated().and().logout()
-		//				.invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
-
-		super.configure(http);
-		http.authorizeRequests().antMatchers("/is-authenticated", "/get-user", "/js*").permitAll()
+		http.authorizeRequests().antMatchers("/is-authenticated", "/get-user", "/register.html").permitAll()
 				.antMatchers("/sso/login*").permitAll().antMatchers("/sso/user/*").permitAll().antMatchers(resources)
 				.permitAll().antMatchers("/token-mode").permitAll().antMatchers("/configure-session-timeout")
-				.permitAll().antMatchers("/refresh-token").permitAll().antMatchers("/bigbrain/token").permitAll()
+				.permitAll().antMatchers("/refresh-token").permitAll().antMatchers("/app/token").permitAll()
 				.antMatchers("/access-token").permitAll().antMatchers("/user-authenticate").permitAll().anyRequest()
 				.authenticated().and().logout().invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
 
 		http.csrf().ignoringAntMatchers("/sso/login*", "/sso/user/*", resources, "/token-mode",
-				"/configure-session-timeout", "/refresh-token", "/bigbrain/token", "/access-token",
-				"/user-authenticate");
+				"/configure-session-timeout", "/refresh-token", "/app/token", "/access-token", "/user-authenticate");
+	}
 
+	@Override
+	public void configure( WebSecurity web ) throws Exception
+	{
+		web.ignoring().antMatchers("*.js", "*.ico");
 	}
 
 	@Bean

@@ -1,9 +1,0 @@
-{
-  "realm": "test1",
-  "resource": "test1-auth",
-  "auth-server-url": "http://test1.localhost:8080/auth",
-  "ssl-required": "external",
-  "credentials": {
-    "secret": "password"
-  }
-}
