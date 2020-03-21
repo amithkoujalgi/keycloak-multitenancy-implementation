@@ -41,6 +41,7 @@ public class RealmConfigFileUtil {
 		{
 			f.delete();
 		}
+		System.out.println(String.format("Auth server config file for realm %s deleted.", realmName));
 	}
 
 	private static String getTemplate() throws IOException

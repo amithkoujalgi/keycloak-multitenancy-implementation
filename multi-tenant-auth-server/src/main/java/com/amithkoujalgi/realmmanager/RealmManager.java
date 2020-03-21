@@ -12,28 +12,45 @@ import com.amithkoujalgi.realmmanager.util.RealmConfigFileUtil;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
+@Component
 public class RealmManager {
 
-	public static void createRealm( String realmName ) throws Exception
-	{
-		String keycloakServerEndpoint = getConfigProperty("keycloak.server.admin.url");
-		String masterRealm = getConfigProperty("keycloak.server.admin.master-realm");
-		String masterClientId = getConfigProperty("keycloak.server.admin.client-id");
-		String masterUsername = getConfigProperty("keycloak.server.admin.username");
-		String masterPassword = getConfigProperty("keycloak.server.admin.password");
+	@Value( "${app.keycloak.server.admin.url}" )
+	private String keycloakServerEndpoint;
 
-		String tenantRootUrl = getConfigProperty("keycloak.custom-realm.root-url").replace("{realm-name}", realmName);
-		String tenantUsername = getConfigProperty("keycloak.custom-realm.admin-user.username");
-		String tenantUserPassword = getConfigProperty("keycloak.custom-realm.admin-user.password");
-		String tenantUserFirstName = getConfigProperty("keycloak.custom-realm.admin-user.firstname");
+	@Value( "${app.keycloak.server.admin.master-realm}" )
+	private String masterRealm;
+
+	@Value( "${app.keycloak.server.admin.client-id}" )
+	private String masterClientId;
+
+	@Value( "${app.keycloak.server.admin.username}" )
+	private String masterUsername;
+
+	@Value( "${app.keycloak.server.admin.password}" )
+	private String masterPassword;
+
+	@Value( "${app.keycloak.custom-realm.root-url}" )
+	private String tenantRootUrl;
+
+	@Value( "${app.keycloak.custom-realm.admin-user.username}" )
+	private String tenantUsername;
+
+	@Value( "${app.keycloak.custom-realm.admin-user.password}" )
+	private String tenantUserPassword;
+
+	@Value( "${app.keycloak.custom-realm.admin-user.firstname}" )
+	private String tenantUserFirstName;
+
+	public void createRealm( String realmName ) throws Exception
+	{
 
 		String ENDPOINT_CREATE_REALM = keycloakServerEndpoint + "/admin/realms/";
 		String ENDPOINT_CREATE_USER = keycloakServerEndpoint + "/admin/realms/%s/users";
@@ -62,15 +79,13 @@ public class RealmManager {
 
 		// Create client
 
-		Client c = new Client(true, realmName + "-auth", tenantRootUrl, Arrays.asList(tenantRootUrl + "/*"));
+		Client c = new Client(true, realmName + "-auth", tenantRootUrl.replace("{realm-name}", realmName),
+				Arrays.asList(tenantRootUrl.replace("{realm-name}", realmName) + "/*"));
 		HTTPUtil.post(String.format(ENDPOINT_CREATE_CLIENT, realmName), c, headers);
 	}
 
-	private static String getConfigProperty( String key ) throws IOException
+	public void deleteRealm( String realmName ) throws Exception
 	{
-		InputStream input = RealmManager.class.getResourceAsStream("/application.properties");
-		Properties prop = new Properties();
-		prop.load(input);
-		return prop.getProperty(key);
+		RealmConfigFileUtil.delete(realmName);
 	}
 }

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-java -jar /apps/appserver.jar &
-
 # Add services
 
 curl -i -X POST \
@@ -51,3 +49,6 @@ curl -i -X POST \
   --data 'preserve_host=true'
 
 # End: Add services and routes to Internal Kong Gateway
+
+
+bash /root/apps/start-auth-server.sh &
