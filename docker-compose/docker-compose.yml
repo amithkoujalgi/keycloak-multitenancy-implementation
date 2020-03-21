@@ -20,6 +20,7 @@ services:
     volumes:
       - ./resources/kong-keycloak/custom-entrypoint.sh:/root/apps/custom-entrypoint.sh
       - ./resources/tmp/appserver.jar:/apps/appserver.jar
+      - ~/keycloak/realms:/root/keycloak/realms
     environment:
       PG_SERVER_HOST: postgres
       KEYCLOAK_USER: admin
