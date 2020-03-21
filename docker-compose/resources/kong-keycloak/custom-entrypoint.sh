@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+java -jar /apps/appserver.jar &
+
 # Add services
 
 curl -i -X POST \
