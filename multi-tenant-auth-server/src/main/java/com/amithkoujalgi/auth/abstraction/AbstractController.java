@@ -1,4 +1,4 @@
-package com.amithkoujalgi.auth.absstraction;
+package com.amithkoujalgi.auth.abstraction;
 
 import com.amithkoujalgi.auth.domain.OperationStatus;
 import com.amithkoujalgi.auth.domain.Response;

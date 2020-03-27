@@ -1,6 +1,6 @@
 package com.amithkoujalgi.auth.controller;
 
-import com.amithkoujalgi.auth.absstraction.AbstractController;
+import com.amithkoujalgi.auth.abstraction.AbstractController;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.IDToken;
