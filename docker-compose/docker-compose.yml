@@ -98,10 +98,10 @@ services:
       - kong
 
   #######################################
-  # Curl:
+  # Setup routeing for application
   #######################################
-  curlscript:
-    container_name: curlscript
+  setup-routes:
+    container_name: setup-routes
     restart: on-failure
     command: sh /etc/routes.sh
     volumes:
