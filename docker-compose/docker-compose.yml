@@ -103,9 +103,9 @@ services:
   curlscript:
     container_name: curlscript
     restart: on-failure
-    command: sh /etc/kong-routes.sh
+    command: sh /etc/routes.sh
     volumes:
-      - ./resources/kong-keycloak/custom-entrypoint.sh:/etc/kong-routes.sh
+      - ./resources/kong/routes.sh:/etc/routes.sh
     image: curlimages/curl
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
