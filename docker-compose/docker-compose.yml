@@ -1,54 +1,71 @@
-version: '3.4'
+version: '3'
 
 services:
 
-  postgres:
-    container_name: postgres
-    image: postgres:latest
+  #######################################
+  # Postgres: The database used by Kong
+  #######################################
+  kong-database:
+    image: postgres:9.6
     environment:
-      POSTGRES_DB: 'kong'
-      POSTGRES_PASSWORD: 'kong'
-      POSTGRES_USER: 'kong'
+      POSTGRES_DB: kong
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: kong
     ports:
-      - 5432:5432
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-
-  kong-keycloak:
-    image: kong-keycloak:1.0
-    container_name: kong-keycloak
-    volumes:
-      - ./resources/kong-keycloak/custom-entrypoint.sh:/root/apps/custom-entrypoint.sh
-      - ./resources/kong-keycloak/start-auth-server.sh:/root/apps/start-auth-server.sh
-      - ./resources/tmp/appserver.jar:/apps/appserver.jar
-    environment:
-      PG_SERVER_HOST: postgres
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: postgres
-      DB_ADDR: postgres
-      DB_PORT: 5432
-      DB_DATABASE: kong
-      DB_USER: kong
-      DB_PASSWORD: kong
-      TENANTS: "org1,org2"
+      - "5432:5432"
     healthcheck:
-      test: curl --fail -s http://localhost:8080/ || exit 1
-      interval: 1m30s
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #######################################
+  # Kong database migration
+  #######################################
+  kong-migration:
+    image: kong:latest
+    command: kong migrations bootstrap
+    restart: on-failure
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_DATABASE: kong
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+    depends_on:
+      - kong-database
+
+  #######################################
+  # Kong: The API Gateway
+  #######################################
+  kong:
+    image: kong:latest
+    restart: on-failure
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_DATABASE: kong
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    depends_on:
+      - kong-database
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
       timeout: 10s
-      retries: 3
+      retries: 10
     ports:
-      - 443:443
       - 8000:8000
       - 8001:8001
-      - 8080:8080
       - 8443:8443
-      - 9090:9090
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-    depends_on:
-      - postgres
+      - 8444:8444
 
+  ##########################################
+  # Kong: The missing UI for the API Gateway
+  ##########################################
   kong-ui:
     image: pantsel/konga
     container_name: kong-ui
@@ -62,3 +79,35 @@ services:
       - 8002:1337
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
+
+  #######################################
+  # Keycloak: The SSO Server for auth
+  #######################################
+  keycloak:
+    container_name: keycloak
+    restart: on-failure
+    image: jboss/keycloak:7.0.1
+    environment:
+      KEYCLOAK_USER: 'admin'
+      KEYCLOAK_PASSWORD: 'admin'
+    ports:
+      - 8080:8080
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    depends_on:
+      - kong
+
+  #######################################
+  # Curl:
+  #######################################
+  curlscript:
+    container_name: curlscript
+    restart: on-failure
+    command: sh /etc/kong-routes.sh
+    volumes:
+      - ./resources/kong-keycloak/custom-entrypoint.sh:/etc/kong-routes.sh
+    image: curlimages/curl
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    depends_on:
+      - kong
