@@ -42,10 +42,8 @@ public class AuthController extends AbstractController {
 	{
 		try
 		{
-			String tenant = SubDomainBasedTenantConfigResolver.getSubdomain(request.getRequestURL().toString());
 			final KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) request
 					.getUserPrincipal();
-			//			System.out.println(keycloakAuthenticationToken.getName());
 
 			final KeycloakPrincipal keycloakPrincipal = (KeycloakPrincipal) keycloakAuthenticationToken.getPrincipal();
 			final IDToken idToken = keycloakPrincipal.getKeycloakSecurityContext().getIdToken();

@@ -25,19 +25,13 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 		SubDomainBasedTenantConfigResolver.adapterConfig = adapterConfig;
 	}
 
-	private static String getDomainName( String url ) throws URISyntaxException
-	{
-		URI uri = new URI(url);
-		String domain = uri.getHost();
-		return domain.startsWith("www.") ? domain.substring(4) : domain;
-	}
-
 	public static String getSubdomain( String requestURI )
 	{
 		String url = null;
 		try
 		{
-			url = getDomainName(requestURI);
+			String domain = new URI(requestURI).getHost();
+			url = domain.startsWith("www.") ? domain.substring(4) : domain;
 		}
 		catch( URISyntaxException e )
 		{
@@ -53,19 +47,7 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 	@Override
 	public KeycloakDeployment resolve( OIDCHttpFacade.Request request )
 	{
-		String url = null;
-		try
-		{
-			url = getDomainName(request.getURI());
-		}
-		catch( URISyntaxException e )
-		{
-			e.printStackTrace();
-		}
-		// If user is registering a new tenant, by-pass the subdomain check and let the user register a tenant
-
-		//split the URL by dot. i.e., extract the subdomain. For example, xxx is the subdomain entity in the URL xxx.app.com
-		String subdomain = url.split("\\.")[0];
+		String subdomain = getSubdomain(request.getURI());
 		KeycloakDeployment deployment = cache.get(subdomain);
 		if( null == deployment )
 		{
