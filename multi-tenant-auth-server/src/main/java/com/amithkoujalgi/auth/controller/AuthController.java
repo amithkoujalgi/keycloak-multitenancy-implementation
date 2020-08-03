@@ -2,9 +2,16 @@ package com.amithkoujalgi.auth.controller;
 
 import com.amithkoujalgi.auth.abstraction.AbstractController;
 import com.amithkoujalgi.auth.model.Token;
+import com.amithkoujalgi.auth.security.SubDomainBasedTenantConfigResolver;
 import org.keycloak.KeycloakPrincipal;
+import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.OIDCHttpFacade;
+import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
+import org.keycloak.adapters.spi.HttpFacade;
+import org.keycloak.adapters.springsecurity.facade.SimpleHttpFacade;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.IDToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +24,9 @@ import java.security.Principal;
 @RestController
 @RequestMapping( "/" )
 public class AuthController extends AbstractController {
+
+	@Autowired
+	SubDomainBasedTenantConfigResolver configResolver;
 
 	public static synchronized String getTokenRedirectionPrefix( String redirectURI, String token )
 	{
@@ -32,6 +42,7 @@ public class AuthController extends AbstractController {
 	{
 		try
 		{
+			String tenant = SubDomainBasedTenantConfigResolver.getSubdomain(request.getRequestURL().toString());
 			final KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) request
 					.getUserPrincipal();
 			//			System.out.println(keycloakAuthenticationToken.getName());
@@ -111,16 +122,16 @@ public class AuthController extends AbstractController {
 	public ModelAndView logout( Principal principal, HttpServletRequest request, HttpServletResponse response )
 			throws ServletException
 	{
+		final KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) request
+				.getUserPrincipal();
+		HttpFacade facade = new SimpleHttpFacade(request, response);
+		KeycloakDeployment deployment = configResolver.resolve(facade.getRequest());
+		configResolver.createAdapterTokenStore(deployment, request).logout();
+		RefreshableKeycloakSecurityContext session = (RefreshableKeycloakSecurityContext) keycloakAuthenticationToken
+				.getAccount().getKeycloakSecurityContext();
+		session.logout(deployment);
 		request.logout();
 		return new ModelAndView("redirect:/");
-
-		//		final KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) request
-		//				.getUserPrincipal();
-		//		HttpFacade facade = new SimpleHttpFacade(request, response);
-		//		KeycloakDeployment deployment = adapterDeploymentContext.resolveDeployment(facade);
-		//		adapterTokenStoreFactory.createAdapterTokenStore(deployment, request, response).logout();
-		//		RefreshableKeycloakSecurityContext session = (RefreshableKeycloakSecurityContext) keycloakAuthenticationToken.getAccount().getKeycloakSecurityContext();
-		//		session.logout(deployment);
 	}
 
 }

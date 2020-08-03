@@ -1,5 +1,6 @@
 package com.amithkoujalgi.auth;
 
+import com.amithkoujalgi.auth.security.SubDomainBasedTenantConfigResolver;
 import com.amithkoujalgi.realmmanager.RealmManager;
 import org.keycloak.adapters.springboot.MultitenantConfiguration;
 import org.springframework.boot.SpringApplication;
@@ -29,5 +30,11 @@ public class AuthServerApp {
 	public RealmManager realmManager()
 	{
 		return new RealmManager();
+	}
+
+	@Bean
+	public SubDomainBasedTenantConfigResolver configResolver()
+	{
+		return new SubDomainBasedTenantConfigResolver();
 	}
 }

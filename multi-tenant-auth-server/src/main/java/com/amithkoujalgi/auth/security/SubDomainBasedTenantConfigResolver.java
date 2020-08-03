@@ -1,12 +1,11 @@
 package com.amithkoujalgi.auth.security;
 
 import com.amithkoujalgi.auth.AuthServerApp;
-import org.keycloak.adapters.KeycloakConfigResolver;
-import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.KeycloakDeploymentBuilder;
-import org.keycloak.adapters.OIDCHttpFacade;
+import org.keycloak.adapters.*;
+import org.keycloak.adapters.springsecurity.token.SpringSecurityTokenStore;
 import org.keycloak.representations.adapters.config.AdapterConfig;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,11 +25,29 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 		SubDomainBasedTenantConfigResolver.adapterConfig = adapterConfig;
 	}
 
-	public String getDomainName( String url ) throws URISyntaxException
+	private static String getDomainName( String url ) throws URISyntaxException
 	{
 		URI uri = new URI(url);
 		String domain = uri.getHost();
 		return domain.startsWith("www.") ? domain.substring(4) : domain;
+	}
+
+	public static String getSubdomain( String requestURI )
+	{
+		String url = null;
+		try
+		{
+			url = getDomainName(requestURI);
+		}
+		catch( URISyntaxException e )
+		{
+			e.printStackTrace();
+		}
+		// If user is registering a new tenant, by-pass the subdomain check and let the user register a tenant
+
+		//split the URL by dot. i.e., extract the subdomain. For example, xxx is the subdomain entity in the URL xxx.app.com
+		String subdomain = url.split("\\.")[0];
+		return subdomain;
 	}
 
 	@Override
@@ -73,4 +90,8 @@ public class SubDomainBasedTenantConfigResolver implements KeycloakConfigResolve
 		return deployment;
 	}
 
+	public AdapterTokenStore createAdapterTokenStore( KeycloakDeployment deployment, HttpServletRequest request )
+	{
+		return new SpringSecurityTokenStore(deployment, request);
+	}
 }
