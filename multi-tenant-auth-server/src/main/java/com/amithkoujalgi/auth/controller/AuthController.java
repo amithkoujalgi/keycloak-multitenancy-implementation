@@ -1,6 +1,7 @@
 package com.amithkoujalgi.auth.controller;
 
 import com.amithkoujalgi.auth.abstraction.AbstractController;
+import com.amithkoujalgi.auth.model.Token;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.IDToken;
@@ -124,35 +125,3 @@ public class AuthController extends AbstractController {
 
 }
 
-class Token {
-
-	private String token;
-
-	private IDToken idToken;
-
-	public Token( String token, IDToken idToken )
-	{
-		this.token = token;
-		this.idToken = idToken;
-	}
-
-	public String getToken()
-	{
-		return token;
-	}
-
-	public void setToken( String token )
-	{
-		this.token = token;
-	}
-
-	public IDToken getIdToken()
-	{
-		return idToken;
-	}
-
-	public void setIdToken( IDToken idToken )
-	{
-		this.idToken = idToken;
-	}
-}
