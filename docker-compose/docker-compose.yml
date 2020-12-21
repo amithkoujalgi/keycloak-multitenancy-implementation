@@ -3,7 +3,7 @@ version: '3.5'
 services:
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:13.1
     environment:
       POSTGRES_DB: demo
       POSTGRES_USER: "root"
@@ -24,7 +24,7 @@ services:
 
   postgres-ui:
     container_name: postgres-ui
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:4.29
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -70,7 +70,7 @@ services:
 
   kong:
     container_name: kong
-    image: kong:latest
+    image: kong:2.2.1-alpine
     environment:
       KONG_DATABASE: postgres
       KONG_PG_HOST: postgres
@@ -97,7 +97,7 @@ services:
 
   kong-ui:
     container_name: kong-ui
-    image: pantsel/konga
+    image: pantsel/konga:0.14.9
     volumes:
       - ./resources/kong-ui/default-node.data:/apps/konga/default-node.data
       - ./resources/kong-ui/default-user.data:/apps/konga/default-user.data
@@ -133,6 +133,11 @@ services:
     depends_on:
       keycloak:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:9090 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     ports:
       - 9090:9090
     restart: unless-stopped
