@@ -1,9 +1,9 @@
 module.exports = [
     {
-        "name": "Main Gateway",
+        "name": "Primary",
         "type": "default",
-        "kong_admin_url": "http://kong-keycloak:8001",
+        "kong_admin_url": "http://kong:8001",
         "kong_api_key": "",
         "health_checks": false,
-    },
+    }
 ]

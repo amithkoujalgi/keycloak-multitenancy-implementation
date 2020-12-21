@@ -12,41 +12,38 @@ There may be same or different set of users in each of these tenents, but the us
 
 - Docker with docker-compose
 - Keycloak
-- Kong (with Postgres)
-
-#### Build
-
-Build the Docker images.
-
-```
-./build-all.sh
-```
+- Kong
+- Postgres (Optional)
 
 #### Run
 
-```bash
-cd docker-compose
-./run.sh
-```
+Note that in docker-compose.yml, there is an environment variable specified called `TENANTS`. 
+The value specified for this is comma-separated values of tenant domain names. On start of the app, these tenant configurations are going to be setup and will be ready to be used.
 
-Note that in docker-compose.yml, there is an environment variable specified called **TENANTS**. The value specified for this is comma-separated values of tenant names. On start of the app, these tenant configurations are going to be setup and will be ready to be used. (By default, org1 and org2 is specified, hence its going to setup these tenants.)
-This will create a default user in each tenant. 
-The user credentials are:
-
-- Username: admin
-- Password: admin
-
-If you are running this on your machine, you might want to add the following entries in **/etc/hosts**
+Add these lines in your `/etc/hosts` file:
 
 ```bash
 127.0.0.1 org1.localhost
 127.0.0.1 org2.localhost
 ```
 
-Once you've setup everything and the docker-compose is started, you can go to your browser and access:
+Start the services:
 
-- http://org1.localhost:8000 - for logging into org1
-- http://org1.localhost:8000 - for logging into org2
+```bash
+cd docker-compose
+./run.sh
+```
+
+This will create a default user in each tenant. 
+The user credentials are:
+
+- Username: admin
+- Password: admin
+
+Once you've setup everything, and the services are started, you can go to your browser and access:
+
+- http://org1.localhost - for logging into org1
+- http://org1.localhost - for logging into org2
 
 ### Access org1
 

@@ -1,57 +1,103 @@
-version: '3.4'
+version: '3.5'
 
 services:
-
   postgres:
     container_name: postgres
-    image: postgres:latest
+    image: postgres
     environment:
-      POSTGRES_DB: 'kong'
-      POSTGRES_PASSWORD: 'kong'
-      POSTGRES_USER: 'kong'
-    ports:
-      - 5432:5432
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-
-  kong-keycloak:
-    image: kong-keycloak:1.0
-    container_name: kong-keycloak
+      POSTGRES_DB: demo
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+      PGDATA: /data/postgres
     volumes:
-      - ./resources/kong-keycloak/custom-entrypoint.sh:/root/apps/custom-entrypoint.sh
-      - ./resources/kong-keycloak/start-auth-server.sh:/root/apps/start-auth-server.sh
-      - ./resources/tmp/appserver.jar:/apps/appserver.jar
+      - ~/appdata/postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  postgres-ui:
+    container_name: postgres-ui
+    image: dpage/pgadmin4
     environment:
-      PG_SERVER_HOST: postgres
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 5050
+      PGADMIN_SERVER_JSON_FILE: /pgadminconfig/servers.json
+    volumes:
+      - postgres-ui:/root/.pgadmin
+      - ./resources/pgadmin:/pgadminconfig
+    ports:
+      - 5050:5050
+    networks:
+      - app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  keycloak:
+    container_name: keycloak
+    image: jboss/keycloak:12.0.1
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: demo
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_SCHEMA: public
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: postgres
-      DB_ADDR: postgres
-      DB_PORT: 5432
-      DB_DATABASE: kong
-      DB_USER: kong
-      DB_PASSWORD: kong
-      TENANTS: "org1,org2"
-    healthcheck:
-      test: curl --fail -s http://localhost:8080/ || exit 1
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
     ports:
-      - 443:443
-      - 8000:8000
-      - 8001:8001
       - 8080:8080
-      - 8443:8443
-      - 9090:9090
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
+    networks:
+      - app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:8080 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  kong:
+    container_name: kong
+    image: kong:latest
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_DATABASE: demo
+      KONG_PG_USER: root
+      KONG_PG_PASSWORD: root
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+    volumes:
+      - ./resources/kong/docker-entrypoint.sh:/docker-entrypoint.sh
+    ports:
+      - 80:8000
+      - 8001:8001
+    networks:
+      - app
+    healthcheck:
+      test: [ "CMD-SHELL", "netstat -an | grep 8000 > /dev/null; if [ 0 != $$? ]; then exit 1; fi;" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
 
   kong-ui:
-    image: pantsel/konga
     container_name: kong-ui
+    image: pantsel/konga
     volumes:
       - ./resources/kong-ui/default-node.data:/apps/konga/default-node.data
       - ./resources/kong-ui/default-user.data:/apps/konga/default-user.data
@@ -62,3 +108,39 @@ services:
       - 8002:1337
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
+    networks:
+      - app
+    depends_on:
+      kong:
+        condition: service_healthy
+    restart: unless-stopped
+
+  auth-server:
+    container_name: auth-server
+    image: amithkoujalgi/multi-tenant-auth-server:1.0
+    volumes:
+      - ./resources/auth-server/docker-entrypoint.sh:/apps/docker-entrypoint.sh
+    environment:
+      KC_ADMIN_ENDPOINT: http://kong:8000/auth
+      KC_AUTH_DOMAIN: localhost # localhost:8000
+      TENANTS: "org1,org2,org3"
+    networks:
+      - app
+    extra_hosts: # This is to allow redirections from auth-server to keycloak for a tenant's user authentication.
+      - "org1.localhost:192.168.1.109"
+      - "org2.localhost:192.168.1.109"
+      - "org3.localhost:192.168.1.109"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  postgres:
+  postgres-ui:
