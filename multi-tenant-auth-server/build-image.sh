@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+mvn clean install
 IMAGE_NAME=amithkoujalgi/multi-tenant-auth-server:1.0
 
 docker build -t $IMAGE_NAME .
@@ -16,4 +17,4 @@ else
   echo ""
 fi
 
-docker push -t $IMAGE_NAME .
+docker push $IMAGE_NAME

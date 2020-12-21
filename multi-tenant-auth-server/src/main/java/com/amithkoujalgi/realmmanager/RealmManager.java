@@ -49,6 +49,9 @@ public class RealmManager {
 	@Value( "${app.keycloak.custom-realm.admin-user.firstname}" )
 	private String tenantUserFirstName;
 
+	@Value( "${app.keycloak.server.port}" )
+	private int keycloakPort;
+
 	public void createRealm( String realmName ) throws Exception
 	{
 
@@ -56,7 +59,7 @@ public class RealmManager {
 		String ENDPOINT_CREATE_USER = keycloakServerEndpoint + "/admin/realms/%s/users";
 		String ENDPOINT_CREATE_CLIENT = keycloakServerEndpoint + "/admin/realms/%s/clients/";
 
-		RealmConfigFileUtil.create(realmName);
+		RealmConfigFileUtil.create(realmName, keycloakPort);
 
 		Keycloak kc = KeycloakBuilder.builder().serverUrl(keycloakServerEndpoint).realm(masterRealm)
 				.username(masterUsername).password(masterPassword).clientId(masterClientId).grantType("password")
