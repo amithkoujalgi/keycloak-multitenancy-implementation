@@ -1,7 +1,7 @@
 {
   "realm": "{realm-name}",
   "resource": "{realm-name}-auth",
-  "auth-server-url": "http://{realm-name}.localhost:{kc-auth-port}/auth",
+  "auth-server-url": "http://{realm-name}.{kc-auth-domain}/auth",
   "ssl-required": "external",
   "credentials": {
     "secret": "password"

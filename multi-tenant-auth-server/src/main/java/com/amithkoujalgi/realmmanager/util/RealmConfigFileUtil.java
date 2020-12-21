@@ -7,7 +7,7 @@ public class RealmConfigFileUtil {
 	private static String realmsDir =
 			System.getProperty("user.home") + File.separator + "keycloak" + File.separator + "realms";
 
-	public static void create( String realmName, int keycloakPort ) throws Exception
+	public static void create( String realmName, String keycloakAuthDomain ) throws Exception
 	{
 		File dir = new File(realmsDir);
 		if( !dir.exists() )
@@ -23,7 +23,7 @@ public class RealmConfigFileUtil {
 		{
 			String template = getTemplate();
 			template = template.replace("{realm-name}", realmName);
-			template = template.replace("{kc-auth-port}", keycloakPort + "");
+			template = template.replace("{kc-auth-domain}", keycloakAuthDomain + "");
 
 			// Create auth server JSON config for a Keycloak realm
 			File newRealm = new File(realmsDir + File.separator + realmName + "-keycloak.json");
