@@ -9,8 +9,8 @@ services:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "root"
       PGDATA: /data/postgres
-    volumes:
-      - ~/appdata/postgres:/data/postgres
+    #    volumes:
+    #      - ~/appdata/postgres:/data/postgres
     ports:
       - "5432:5432"
     networks:
@@ -121,15 +121,15 @@ services:
     volumes:
       - ./resources/auth-server/docker-entrypoint.sh:/apps/docker-entrypoint.sh
     environment:
-      KC_ADMIN_ENDPOINT: http://kong:8000/auth
-      KC_AUTH_DOMAIN: localhost # localhost:8000
+      KC_ADMIN_ENDPOINT: http://kong:8000/auth # This is used by auth-server to talk to keycloak server for admin operations such as creation of realm and users, etc.
+      KC_AUTH_DOMAIN: localhost # This can also be localhost:8000, depending on the keycloak port exposed from kong. This is to redirect the user to the auth domain of keycloak.
       TENANTS: "org1,org2,org3"
     networks:
       - app
     extra_hosts: # This is to allow redirections from auth-server to keycloak for a tenant's user authentication.
-      - "org1.localhost:192.168.1.109"
-      - "org2.localhost:192.168.1.109"
-      - "org3.localhost:192.168.1.109"
+      - "org1.localhost:${IP_ADDRESS}"
+      - "org2.localhost:${IP_ADDRESS}"
+      - "org3.localhost:${IP_ADDRESS}"
     depends_on:
       keycloak:
         condition: service_healthy
