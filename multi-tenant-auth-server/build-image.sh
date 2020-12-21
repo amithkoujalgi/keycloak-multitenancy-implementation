@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME=multi-tenant-auth-server:1.0
+IMAGE_NAME=amithkoujalgi/multi-tenant-auth-server:1.0
 
 docker build -t $IMAGE_NAME .
 
@@ -15,3 +15,5 @@ else
   echo "Clean up completed. Docker image [$IMAGE_NAME] is now ready for use."
   echo ""
 fi
+
+docker push -t $IMAGE_NAME .

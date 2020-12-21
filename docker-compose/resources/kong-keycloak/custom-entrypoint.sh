@@ -51,4 +51,4 @@ curl -i -X POST \
 # End: Add services and routes to Internal Kong Gateway
 
 
-bash /root/apps/start-auth-server.sh &
+#bash /root/apps/start-auth-server.sh &

@@ -1,3 +1,13 @@
+Build and start from docker:
+
+```
+docker run -it \
+    -e KC_ADMIN_ENDPOINT=http://192.168.1.109:8080/auth \
+    -e KC_AUTH_HOST=192.168.1.109 \
+    -e KC_AUTH_PORT=8000 \
+    multi-tenant-auth-server:1.0
+```
+
 Start and setup tenants in Keycloak. Use the JSONs to setup the realms.
 
 
