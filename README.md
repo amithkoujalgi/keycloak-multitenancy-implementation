@@ -44,15 +44,3 @@ Once you've setup everything, and the services are started, you can go to your b
 
 - http://org1.localhost - for logging into org1
 - http://org1.localhost - for logging into org2
-
-### Access org1
-
-![Org1 Auth Page](image-references/1.png)
-![Org1 Authenticate](image-references/2.png)
-![Org1 Authenticated](image-references/3.png)
-
-### Access org2
-
-![Org2 Auth Page](image-references/4.png)
-![Org2 Authenticate](image-references/5.png)
-![Org2 Authenticated](image-references/6.png)
