@@ -9,8 +9,6 @@ services:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "root"
       PGDATA: /data/postgres
-    #    volumes:
-    #      - ~/appdata/postgres:/data/postgres
     ports:
       - "5432:5432"
     networks:
@@ -20,6 +18,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
     restart: unless-stopped
 
   postgres-ui:
@@ -40,6 +43,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
     restart: unless-stopped
 
   keycloak:
@@ -66,6 +74,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 500M
     restart: unless-stopped
 
   kong:
@@ -93,6 +106,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
     restart: unless-stopped
 
   kong-ui:
@@ -113,6 +131,11 @@ services:
     depends_on:
       kong:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
     restart: unless-stopped
 
   auth-server:
@@ -135,6 +158,11 @@ services:
         condition: service_healthy
     ports:
       - 9090:9090
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 500M
     restart: unless-stopped
 
 networks:
